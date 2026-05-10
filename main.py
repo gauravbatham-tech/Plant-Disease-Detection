@@ -3,6 +3,93 @@ import numpy as np
 import keras
 
 # =========================
+# Custom CSS for Beautiful UI
+# =========================
+st.markdown("""
+<style>
+    /* Overall app styling */
+    .main {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    /* Sidebar styling */
+    .sidebar .sidebar-content {
+        background: linear-gradient(180deg, #4CAF50 0%, #45a049 100%);
+        color: white;
+    }
+    
+    /* Headers */
+    h1, h2, h3 {
+        color: #FFD700 !important;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        font-family: 'Arial Black', sans-serif;
+    }
+    
+    /* Buttons */
+    .stButton>button {
+        background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-weight: bold;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+    
+    /* File uploader */
+    .uploadedFile {
+        background: rgba(255,255,255,0.1);
+        border-radius: 15px;
+        padding: 20px;
+        border: 2px dashed #FFD700;
+    }
+    
+    /* Success, warning, info boxes */
+    .stAlert {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    /* Cards for results */
+    .result-card {
+        background: rgba(255,255,255,0.95);
+        color: #333;
+        border-radius: 20px;
+        padding: 25px;
+        margin: 15px 0;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        border-left: 5px solid #4CAF50;
+    }
+    
+    /* Home page image */
+    .home-image {
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        margin: 20px 0;
+    }
+    
+    /* Markdown text */
+    .stMarkdown {
+        color: #E8F5E8;
+    }
+    
+    /* Selectbox */
+    .stSelectbox {
+        background: rgba(255,255,255,0.1);
+        border-radius: 10px;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# =========================
 # Disease Remedy Dictionary
 # =========================
 disease_info = {
@@ -344,97 +431,274 @@ def model_prediction(test_image):
 # =========================
 # Sidebar
 # =========================
-st.sidebar.title("Dashboard")
-app_mode = st.sidebar.selectbox("Select Page", ["Home", "About", "Disease Recognition"])
+st.sidebar.markdown("""
+<div style="text-align: center; padding: 20px;">
+    <h2 style="color: #FFD700; margin-bottom: 30px;">🌿 PlantCare AI</h2>
+    <p style="color: #E8F5E8; font-size: 14px;">Advanced Disease Detection System</p>
+</div>
+""", unsafe_allow_html=True)
+
+app_mode = st.sidebar.selectbox(
+    "🌟 Choose Your Path",
+    ["🏠 Home", "ℹ️ About", "🔍 Disease Recognition"],
+    help="Navigate through different sections of the app"
+)
 
 
 # =========================
 # Home Page
 # =========================
-if app_mode == "Home":
-    st.header("PLANT DISEASE RECOGNITION SYSTEM")
-    st.image("home_page.jpeg", use_container_width=True)
-
+if app_mode == "🏠 Home":
+    # Hero section
     st.markdown("""
-    Welcome to the Plant Disease Recognition System!
-
-    Upload a plant leaf image and get:
-    - Disease detection
-    - Confidence score
-    - Preventive measures
-
-    Go to **Disease Recognition** to begin.
-    """)
+    <div style="text-align: center; padding: 40px 20px; background: rgba(255,255,255,0.1); border-radius: 25px; margin-bottom: 30px;">
+        <h1 style="font-size: 3em; margin-bottom: 10px;">🌱 PLANT DISEASE RECOGNITION SYSTEM</h1>
+        <p style="font-size: 1.2em; color: #E8F5E8;">AI-Powered Plant Health Analysis</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Main image
+    col1, col2, col3 = st.columns([1, 3, 1])
+    with col2:
+        st.image("home_page.jpeg", use_container_width=True, caption="Advanced Plant Disease Detection")
+    
+    # Feature cards
+    st.markdown("---")
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.markdown("""
+        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; text-align: center; margin: 10px;">
+            <h3>🔬 AI Detection</h3>
+            <p>State-of-the-art CNN models for accurate disease identification</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; text-align: center; margin: 10px;">
+            <h3>💊 Treatment Guide</h3>
+            <p>Comprehensive remedies and preventive measures</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("""
+        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; text-align: center; margin: 10px;">
+            <h3>📊 Confidence Score</h3>
+            <p>Reliable prediction confidence for better decision making</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Call to action
+    st.markdown("""
+    <div style="text-align: center; padding: 30px; background: rgba(76, 175, 80, 0.2); border-radius: 20px; margin-top: 30px;">
+        <h2 style="color: #FFD700;">Ready to Diagnose Your Plants?</h2>
+        <p style="font-size: 1.1em;">Upload a leaf image and get instant results with treatment recommendations</p>
+        <p style="font-size: 1.3em; font-weight: bold;">➡️ Go to Disease Recognition to begin!</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 
 # =========================
 # About Page
 # =========================
-elif app_mode == "About":
-    st.header("About")
-
+elif app_mode == "ℹ️ About":
     st.markdown("""
-    Dataset contains ~87K images across 38 classes.
-
-    Split:
-    - Train: 70K+
-    - Validation: 17K+
-    - Test: 33 images
-
-    Built using CNN for plant disease classification.
-    """)
+    <div style="text-align: center; padding: 30px; background: rgba(255,255,255,0.1); border-radius: 20px; margin-bottom: 30px;">
+        <h1>About PlantCare AI</h1>
+        <p style="font-size: 1.2em;">Understanding Our Technology</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Dataset info
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        <div style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px; height: 300px;">
+            <h3 style="color: #FFD700;">📊 Dataset Overview</h3>
+            <ul style="color: #E8F5E8; font-size: 16px; line-height: 1.6;">
+                <li><strong>87,000+</strong> high-quality images</li>
+                <li><strong>38 different</strong> plant disease classes</li>
+                <li><strong>14 plant species</strong> covered</li>
+                <li>Comprehensive disease spectrum</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px; height: 300px;">
+            <h3 style="color: #FFD700;">📈 Data Split</h3>
+            <div style="color: #E8F5E8; font-size: 16px; line-height: 1.8;">
+                <p><strong>Training Set:</strong> 70,000+ images</p>
+                <p><strong>Validation Set:</strong> 17,000+ images</p>
+                <p><strong>Test Set:</strong> 33 benchmark images</p>
+                <br>
+                <p><strong>Technology:</strong> Convolutional Neural Networks</p>
+                <p><strong>Accuracy:</strong> Industry-leading performance</p>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Technology section
+    st.markdown("---")
+    st.markdown("""
+    <div style="background: rgba(76, 175, 80, 0.2); padding: 30px; border-radius: 20px; margin-top: 30px;">
+        <h2 style="text-align: center; color: #FFD700;">🚀 Advanced AI Technology</h2>
+        <p style="text-align: center; font-size: 1.1em; color: #E8F5E8;">
+            Our system uses state-of-the-art Convolutional Neural Networks trained on extensive datasets 
+            to provide accurate plant disease detection with detailed treatment recommendations.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
 
 # =========================
 # Disease Recognition Page
 # =========================
-elif app_mode == "Disease Recognition":
-    st.header("Disease Recognition")
-
-    test_image = st.file_uploader("Upload a plant leaf image")
+elif app_mode == "🔍 Disease Recognition":
+    st.markdown("""
+    <div style="text-align: center; padding: 30px; background: rgba(255,255,255,0.1); border-radius: 20px; margin-bottom: 30px;">
+        <h1>🔍 Plant Disease Analysis</h1>
+        <p style="font-size: 1.2em;">Upload a leaf image for instant diagnosis</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Upload section
+    st.markdown("""
+    <div style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 15px; margin-bottom: 20px;">
+        <h3 style="color: #FFD700; text-align: center;">📤 Upload Your Plant Leaf Image</h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    test_image = st.file_uploader(
+        "Choose an image file",
+        type=["jpg", "jpeg", "png"],
+        help="Upload a clear image of the plant leaf for best results"
+    )
 
     if test_image is not None:
-        if st.button("Show Image"):
-            st.image(test_image, use_container_width=True)
+        # Image display section
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            st.markdown("""
+            <div style="background: rgba(255,255,255,0.95); padding: 20px; border-radius: 15px; text-align: center;">
+                <h4 style="color: #333; margin-bottom: 15px;">📸 Uploaded Image</h4>
+            </div>
+            """, unsafe_allow_html=True)
+            st.image(test_image, use_container_width=True, caption="Your uploaded leaf image")
+        
+        # Buttons section
+        st.markdown("---")
+        col1, col2, col3 = st.columns([1, 1, 1])
+        
+        with col1:
+            st.write("")  # Spacer
+        
+        with col2:
+            if st.button("🔮 Analyze Disease", use_container_width=True):
+                with st.spinner("🧠 AI is analyzing your image..."):
+                    import time
+                    time.sleep(2)  # Simulate processing time
+                    
+                    # Class labels
+                    class_name = [
+                        'Apple___Apple_scab', 'Apple___Black_rot', 'Apple___Cedar_apple_rust', 'Apple___healthy',
+                        'Blueberry___healthy', 'Cherry_(including_sour)___Powdery_mildew',
+                        'Cherry_(including_sour)___healthy', 'Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot',
+                        'Corn_(maize)___Common_rust_', 'Corn_(maize)___Northern_Leaf_Blight',
+                        'Corn_(maize)___healthy', 'Grape___Black_rot', 'Grape___Esca_(Black_Measles)',
+                        'Grape___Leaf_blight_(Isariopsis_Leaf_Spot)', 'Grape___healthy',
+                        'Orange___Haunglongbing_(Citrus_greening)', 'Peach___Bacterial_spot', 'Peach___healthy',
+                        'Pepper,_bell___Bacterial_spot', 'Pepper,_bell___healthy',
+                        'Potato___Early_blight', 'Potato___Late_blight', 'Potato___healthy',
+                        'Raspberry___healthy', 'Soybean___healthy', 'Squash___Powdery_mildew',
+                        'Strawberry___Leaf_scorch', 'Strawberry___healthy',
+                        'Tomato___Bacterial_spot', 'Tomato___Early_blight', 'Tomato___Late_blight',
+                        'Tomato___Leaf_Mold', 'Tomato___Septoria_leaf_spot',
+                        'Tomato___Spider_mites Two-spotted_spider_mite', 'Tomato___Target_Spot',
+                        'Tomato___Tomato_Yellow_Leaf_Curl_Virus', 'Tomato___Tomato_mosaic_virus',
+                        'Tomato___healthy'
+                    ]
 
-        if st.button("Predict"):
-            st.snow()
+                    # Prediction
+                    result_index, confidence = model_prediction(test_image)
+                    predicted_disease = class_name[result_index]
 
-            # Class labels
-            class_name = [
-                'Apple___Apple_scab', 'Apple___Black_rot', 'Apple___Cedar_apple_rust', 'Apple___healthy',
-                'Blueberry___healthy', 'Cherry_(including_sour)___Powdery_mildew',
-                'Cherry_(including_sour)___healthy', 'Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot',
-                'Corn_(maize)___Common_rust_', 'Corn_(maize)___Northern_Leaf_Blight',
-                'Corn_(maize)___healthy', 'Grape___Black_rot', 'Grape___Esca_(Black_Measles)',
-                'Grape___Leaf_blight_(Isariopsis_Leaf_Spot)', 'Grape___healthy',
-                'Orange___Haunglongbing_(Citrus_greening)', 'Peach___Bacterial_spot', 'Peach___healthy',
-                'Pepper,_bell___Bacterial_spot', 'Pepper,_bell___healthy',
-                'Potato___Early_blight', 'Potato___Late_blight', 'Potato___healthy',
-                'Raspberry___healthy', 'Soybean___healthy', 'Squash___Powdery_mildew',
-                'Strawberry___Leaf_scorch', 'Strawberry___healthy',
-                'Tomato___Bacterial_spot', 'Tomato___Early_blight', 'Tomato___Late_blight',
-                'Tomato___Leaf_Mold', 'Tomato___Septoria_leaf_spot',
-                'Tomato___Spider_mites Two-spotted_spider_mite', 'Tomato___Target_Spot',
-                'Tomato___Tomato_Yellow_Leaf_Curl_Virus', 'Tomato___Tomato_mosaic_virus',
-                'Tomato___healthy'
-            ]
+                    # Clean display
+                    plant, disease = predicted_disease.split("___")
 
-            # Prediction
-            result_index, confidence = model_prediction(test_image)
-            predicted_disease = class_name[result_index]
-
-            # Clean display
-            plant, disease = predicted_disease.split("___")
-
-            st.success(f"Plant: {plant}")
-            st.warning(f"Disease: {disease}")
-            st.info(f"Confidence: {confidence:.2f}%")
-
-            st.subheader("Preventive Measures / Cure")
-            # Remedy
-            remedy = disease_info.get(predicted_disease)
-
-            if remedy:
-                for key, value in remedy.items():
-                    st.write(f"**{key}:** {value}")
+                    # Results section
+                    st.markdown("---")
+                    st.markdown("""
+                    <div style="text-align: center; padding: 20px; background: rgba(76, 175, 80, 0.2); border-radius: 20px; margin-bottom: 30px;">
+                        <h2 style="color: #FFD700;">🎯 Analysis Complete!</h2>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                    # Result cards
+                    col1, col2, col3 = st.columns(3)
+                    
+                    with col1:
+                        st.markdown(f"""
+                        <div class="result-card">
+                            <h4 style="color: #4CAF50; margin-bottom: 10px;">🌿 Plant Type</h4>
+                            <h3 style="color: #333; margin: 0;">{plant.replace('_', ' ')}</h3>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    
+                    with col2:
+                        color = "#FF6B6B" if disease != "healthy" else "#4CAF50"
+                        icon = "⚠️" if disease != "healthy" else "✅"
+                        st.markdown(f"""
+                        <div class="result-card">
+                            <h4 style="color: {color}; margin-bottom: 10px;">{icon} Disease Status</h4>
+                            <h3 style="color: #333; margin: 0;">{disease.replace('_', ' ')}</h3>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    
+                    with col3:
+                        confidence_color = "#4CAF50" if confidence > 80 else "#FF9800" if confidence > 60 else "#FF6B6B"
+                        st.markdown(f"""
+                        <div class="result-card">
+                            <h4 style="color: {confidence_color}; margin-bottom: 10px;">📊 Confidence</h4>
+                            <h2 style="color: #333; margin: 0; font-size: 2em;">{confidence:.1f}%</h2>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    
+                    # Treatment section
+                    if disease != "healthy":
+                        st.markdown("""
+                        <div style="background: rgba(255,193,7,0.2); padding: 25px; border-radius: 15px; margin-top: 30px; border-left: 5px solid #FFC107;">
+                            <h3 style="color: #FF6B35;">💊 Treatment & Prevention Guide</h3>
+                        </div>
+                        """, unsafe_allow_html=True)
+                        
+                        remedy = disease_info.get(predicted_disease)
+                        
+                        if remedy:
+                            cols = st.columns(2)
+                            items = list(remedy.items())
+                            
+                            for i, (key, value) in enumerate(items):
+                                with cols[i % 2]:
+                                    st.markdown(f"""
+                                    <div style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 10px; margin: 5px 0; color: #333;">
+                                        <strong style="color: #4CAF50;">{key}:</strong><br>
+                                        {value}
+                                    </div>
+                                    """, unsafe_allow_html=True)
+                        else:
+                            st.info("Treatment information for this disease is being updated.")
+                    else:
+                        st.markdown("""
+                        <div style="background: rgba(76, 175, 80, 0.2); padding: 25px; border-radius: 15px; margin-top: 30px; text-align: center;">
+                            <h3 style="color: #4CAF50;">🎉 Great News!</h3>
+                            <p style="font-size: 1.2em; color: #E8F5E8;">Your plant appears to be healthy. Keep up the good care!</p>
+                        </div>
+                        """, unsafe_allow_html=True)
+        
+        with col3:
+            st.write("")  # Spacer
