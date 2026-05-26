@@ -1,93 +1,67 @@
+import os
+from pathlib import Path
+
 import streamlit as st
 import numpy as np
 import keras
 
+BASE_DIR = Path(__file__).resolve().parent
+
+st.set_page_config(page_title="PlantCare AI", page_icon="🌿", layout="wide")
+
 # =========================
-# Custom CSS for Beautiful UI
+# Premium UI CSS
 # =========================
 st.markdown("""
 <style>
-    /* Overall app styling */
-    .main {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-    }
-    
-    /* Sidebar styling */
-    .sidebar .sidebar-content {
-        background: linear-gradient(180deg, #4CAF50 0%, #45a049 100%);
-        color: white;
-    }
-    
-    /* Headers */
-    h1, h2, h3 {
-        color: #FFD700 !important;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        font-family: 'Arial Black', sans-serif;
-    }
-    
-    /* Buttons */
-    .stButton>button {
-        background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
-        color: white;
-        border: none;
-        border-radius: 25px;
-        padding: 10px 20px;
-        font-weight: bold;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        transition: all 0.3s ease;
-    }
-    
-    .stButton>button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-    }
-    
-    /* File uploader */
-    .uploadedFile {
-        background: rgba(255,255,255,0.1);
-        border-radius: 15px;
-        padding: 20px;
-        border: 2px dashed #FFD700;
-    }
-    
-    /* Success, warning, info boxes */
-    .stAlert {
-        border-radius: 15px;
-        border: none;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    }
-    
-    /* Cards for results */
-    .result-card {
-        background: rgba(255,255,255,0.95);
-        color: #333;
-        border-radius: 20px;
-        padding: 25px;
-        margin: 15px 0;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        border-left: 5px solid #4CAF50;
-    }
-    
-    /* Home page image */
-    .home-image {
-        border-radius: 20px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        margin: 20px 0;
-    }
-    
-    /* Markdown text */
-    .stMarkdown {
-        color: #E8F5E8;
-    }
-    
-    /* Selectbox */
-    .stSelectbox {
-        background: rgba(255,255,255,0.1);
-        border-radius: 10px;
-    }
+[data-testid="stAppViewContainer"]{
+background:linear-gradient(135deg,#081c15,#1b4332,#2d6a4f,#40916c);
+background-size:400% 400%;
+animation:bgMove 15s ease infinite;
+}
+@keyframes bgMove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+section[data-testid="stSidebar"]{
+background:rgba(0,0,0,.5);
+backdrop-filter:blur(20px);
+}
+
+.stButton>button{
+width:100%;
+height:55px;
+border-radius:30px;
+font-size:18px;
+font-weight:bold;
+border:none;
+background:linear-gradient(90deg,#00c853,#64dd17);
+color:white;
+}
+
+.stButton>button:hover{
+transform:scale(1.03);
+transition:.3s;
+}
+
+.result-card{
+background:rgba(255,255,255,.12);
+backdrop-filter:blur(20px);
+padding:25px;
+border-radius:20px;
+color:white;
+box-shadow:0px 8px 30px rgba(0,0,0,.3);
+}
+
+h1,h2,h3{
+color:#d9ffb3 !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
+
 
 # =========================
 # Disease Remedy Dictionary
@@ -411,10 +385,45 @@ disease_info = {
 }
 
 # =========================
+# Ensure Model Exists Function
+# =========================
+def ensure_model_exists():
+    """Check if model exists, if not, guide user to create it"""
+    import os
+    
+    model_path = BASE_DIR / "fixed_plant_disease_model.keras"
+    trained_model_path = BASE_DIR / "trained_plant_disease_model.keras"
+    fix_script_path = BASE_DIR / "fix_model.py"
+    
+    if not model_path.exists():
+        # Check if we can fix the original model
+        if trained_model_path.exists():
+            # Run fix_model.py script
+            import subprocess
+            try:
+                subprocess.run(["python", str(fix_script_path)], check=True, capture_output=True, cwd=str(BASE_DIR))
+                print(f"✓ Model fixed and saved as {model_path}")
+            except Exception as e:
+                st.error(f"Failed to fix model: {e}\nPlease run: python {fix_script_path}")
+                return False
+        else:
+            st.error(
+                "⚠️ **Model Not Found!**\n\n"
+                "The trained model doesn't exist. Please:\n"
+                "1. Run the training notebook: `Train_plant_disease.ipynb`\n"
+                "2. Then run: `python fix_model.py`\n"
+                "3. Refresh this page\n\n"
+                "Or download a pre-trained model and place it as `trained_plant_disease_model.keras` in the app folder"
+            )
+            return False
+    return True
+
+# =========================
 # Model Prediction Function
 # =========================
 def model_prediction(test_image):
-    model = keras.models.load_model("fixed_plant_disease_model.keras")
+    model_file = BASE_DIR / "fixed_plant_disease_model.keras"
+    model = keras.models.load_model(str(model_file))
 
     image = keras.preprocessing.image.load_img(test_image, target_size=(128,128))
     input_arr = keras.preprocessing.image.img_to_array(image)
@@ -599,6 +608,10 @@ elif app_mode == "🔍 Disease Recognition":
         
         with col2:
             if st.button("🔮 Analyze Disease", use_container_width=True):
+                # Ensure model exists before prediction
+                if not ensure_model_exists():
+                    st.stop()
+                
                 with st.spinner("🧠 AI is analyzing your image..."):
                     import time
                     time.sleep(2)  # Simulate processing time
@@ -633,41 +646,62 @@ elif app_mode == "🔍 Disease Recognition":
                     # Results section
                     st.markdown("---")
                     st.markdown("""
-                    <div style="text-align: center; padding: 20px; background: rgba(76, 175, 80, 0.2); border-radius: 20px; margin-bottom: 30px;">
-                        <h2 style="color: #FFD700;">🎯 Analysis Complete!</h2>
+                    <div style="text-align:center;
+                    padding:20px;
+                    background:rgba(76,175,80,.18);
+                    border-radius:22px;
+                    margin-bottom:25px;">
+                        <h2 style="margin:0; color:#ffffff;">🎯 Analysis Complete!</h2>
+                        <p style="margin:10px 0 0; color:#e8f5e8;">Your diagnosis summary is ready.</p>
                     </div>
                     """, unsafe_allow_html=True)
-                    
-                    # Result cards
-                    col1, col2, col3 = st.columns(3)
-                    
-                    with col1:
-                        st.markdown(f"""
-                        <div class="result-card">
-                            <h4 style="color: #4CAF50; margin-bottom: 10px;">🌿 Plant Type</h4>
-                            <h3 style="color: #333; margin: 0;">{plant.replace('_', ' ')}</h3>
+
+                    card_style = """
+                    background:rgba(255,255,255,.12);
+                    backdrop-filter:blur(15px);
+                    padding:28px 20px;
+                    border-radius:22px;
+                    min-height:240px;
+                    text-align:center;
+                    display:flex;
+                    flex-direction:column;
+                    justify-content:center;
+                    align-items:center;
+                    overflow:hidden;
+                    word-wrap:break-word;
+                    width:100%;
+                    max-width:340px;
+                    """
+
+                    color = "#ff6b6b" if disease!="healthy" else "#4CAF50"
+                    icon = "⚠️" if disease!="healthy" else "✅"
+                    confidence_color = "#4CAF50" if confidence>80 else "#ff9800"
+
+                    st.markdown(f"""
+                    <div style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center; align-items:stretch; margin-bottom:30px;">
+                        <div style="{card_style}">
+                            <h4 style="color:#64dd17; margin-bottom:12px;">🌿 Plant Type</h4>
+                            <h2 style="color:white; font-size:28px; line-height:1.2; margin:0;">
+                                {plant.replace('_',' ')}
+                            </h2>
                         </div>
-                        """, unsafe_allow_html=True)
-                    
-                    with col2:
-                        color = "#FF6B6B" if disease != "healthy" else "#4CAF50"
-                        icon = "⚠️" if disease != "healthy" else "✅"
-                        st.markdown(f"""
-                        <div class="result-card">
-                            <h4 style="color: {color}; margin-bottom: 10px;">{icon} Disease Status</h4>
-                            <h3 style="color: #333; margin: 0;">{disease.replace('_', ' ')}</h3>
+                        <div style="{card_style}">
+                            <h4 style="color:{color}; margin-bottom:12px;">
+                                {icon} Disease Status
+                            </h4>
+                            <h2 style="color:white; font-size:28px; line-height:1.2; margin:0;">
+                                {disease.replace('_',' ')}
+                            </h2>
                         </div>
-                        """, unsafe_allow_html=True)
-                    
-                    with col3:
-                        confidence_color = "#4CAF50" if confidence > 80 else "#FF9800" if confidence > 60 else "#FF6B6B"
-                        st.markdown(f"""
-                        <div class="result-card">
-                            <h4 style="color: {confidence_color}; margin-bottom: 10px;">📊 Confidence</h4>
-                            <h2 style="color: #333; margin: 0; font-size: 2em;">{confidence:.1f}%</h2>
+                        <div style="{card_style}">
+                            <h4 style="color:{confidence_color}; margin-bottom:12px;">📊 Confidence</h4>
+                            <h1 style="color:white; font-size:42px; margin:0;">
+                                {confidence:.1f}%
+                            </h1>
                         </div>
-                        """, unsafe_allow_html=True)
-                    
+                    </div>
+                    """, unsafe_allow_html=True)
+
                     # Treatment section
                     if disease != "healthy":
                         st.markdown("""
@@ -699,6 +733,6 @@ elif app_mode == "🔍 Disease Recognition":
                             <p style="font-size: 1.2em; color: #E8F5E8;">Your plant appears to be healthy. Keep up the good care!</p>
                         </div>
                         """, unsafe_allow_html=True)
-        
+
         with col3:
             st.write("")  # Spacer
