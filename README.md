@@ -10,6 +10,11 @@ Plant diseases can spread quickly and often damage crops before they are noticed
 
 The application is built with Python and Streamlit, and the prediction model is based on a convolutional neural network trained on plant image data.
 
+## About
+This project uses a CNN-based classification model trained on plant disease image data. The system is designed for practical diagnosis support rather than as a medical or agronomy replacement. It is best used as a helpful tool for quick screening and early identification.
+
+Results may vary depending on image quality, lighting, disease stage, and leaf condition. Clear images taken in good lighting usually give better predictions.
+
 ## Features
 
 - Upload a plant leaf image
