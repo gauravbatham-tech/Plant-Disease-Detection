@@ -1,63 +1,104 @@
-# PlantCare AI
+# 🌿 PlantCare AI — Plant Disease Detection & Treatment System
 
-PlantCare AI is a plant disease detection project built to help identify common plant diseases from leaf images. The app allows users to upload a picture of a plant leaf, runs it through a trained deep learning model, and shows the predicted disease along with a basic treatment and prevention guide.
+> Detect plant diseases from leaf images using deep learning and explore relevant treatment and prevention guidance.
 
-This project is useful for farmers, gardeners, students, and anyone who wants a quick way to check whether a plant looks healthy or shows signs of disease.
+PlantCare AI is a Python-based web application that uses a Convolutional Neural Network (CNN) to classify plant leaf images into healthy or diseased categories. Built with TensorFlow, Keras, and Streamlit, it provides predictions, confidence scores, and disease-specific care recommendations.
 
-## Overview
+## ✨ Features
 
-Plant diseases can spread quickly and often damage crops before they are noticed. Early detection helps reduce losses and makes treatment more effective. This project uses image recognition to classify plant leaves into healthy and diseased categories.
+- 🖼️ **Leaf Image Upload:** Upload plant leaf images for analysis.
+- 🧠 **Deep Learning Classification:** Predict plant health and disease categories using a trained CNN model.
+- 🌱 **Multi-Crop Support:** Supports 14 crop types and 38 plant health and disease categories.
+- 📊 **Confidence Scores:** View the model's prediction confidence.
+- 💊 **Treatment Guidance:** Access symptom descriptions, chemical and organic treatment suggestions, and prevention tips.
+- 🌐 **Interactive Web App:** Simple interface built with Streamlit.
 
-The application is built with Python and Streamlit, and the prediction model is based on a convolutional neural network trained on plant image data.
+## 🏗️ How It Works
 
-## About
-This project uses a CNN-based classification model trained on plant disease image data. The system is designed for practical diagnosis support rather than as a medical or agronomy replacement. It is best used as a helpful tool for quick screening and early identification.
+```text
+       ┌─────────────────────┐
+       │  Upload Leaf Image  │
+       └──────────┬──────────┘
+                  ↓
+       ┌─────────────────────┐
+       │ Image Preprocessing │
+       └──────────┬──────────┘
+                  ↓
+       ┌─────────────────────┐
+       │   Trained CNN Model │
+       │  TensorFlow / Keras │
+       └──────────┬──────────┘
+                  ↓
+       ┌─────────────────────┐
+       │ Disease Prediction  │
+       │ + Confidence Score  │
+       └──────────┬──────────┘
+                  ↓
+       ┌─────────────────────┐
+       │ Treatment &         │
+       │ Prevention Guidance │
+       └─────────────────────┘
+```
 
-Results may vary depending on image quality, lighting, disease stage, and leaf condition. Clear images taken in good lighting usually give better predictions.
+## 🌾 Supported Crops
 
-## Features
+The model supports the following 14 crop types:
 
-- Upload a plant leaf image
-- Detect disease using a trained deep learning model
-- Display plant type and predicted disease
-- Show confidence score of the prediction
-- Provide symptom, chemical, organic, and prevention guidance
-- Simple and user-friendly web interface
+Apple, Blueberry, Cherry, Corn, Grape, Orange, Peach, Pepper, Potato, Raspberry, Soybean, Squash, Strawberry, and Tomato.
 
-## How it works
+The classification dataset includes healthy and diseased leaf categories.
 
-1. The user uploads an image of a plant leaf.
-2. The app preprocesses the image to the required size and format.
-3. The model predicts the class of the image.
-4. The result is displayed with the plant name, disease name, and confidence level.
-5. The app shows recommended treatment and prevention steps based on the detected disease.
+## 🛠️ Tech Stack
 
-## Supported crops and diseases
+- **Language:** Python
+- **Deep Learning:** TensorFlow, Keras, CNN
+- **Web Framework:** Streamlit
+- **Image Processing:** PIL / Pillow, NumPy
+- **Dataset:** Plant disease image dataset used for model training
 
-The model has been trained on a wide range of plant categories, including:
+## ⚙️ Installation & Setup
 
-- Apple
-- Blueberry
-- Cherry
-- Corn
-- Grape
-- Orange
-- Peach
-- Pepper
-- Potato
-- Raspberry
-- Soybean
-- Squash
-- Strawberry
-- Tomato
+### 1. Clone the Repository
 
-The dataset includes both healthy and diseased leaf samples for many of these crops.
+```bash
+git clone <YOUR_GITHUB_REPOSITORY_URL>
+cd PlantCare-AI
+```
 
-## Tech Stack
+### 2. Create a Virtual Environment
 
-- Python
-- Streamlit
-- TensorFlow / Keras
-- NumPy
-- PIL / image preprocessing
-- Deep learning model for image classification
+```bash
+python -m venv .venv
+```
+
+Activate the environment:
+
+```bash
+# Windows PowerShell
+.venv\Scripts\Activate.ps1
+```
+
+```bash
+# macOS / Linux
+source .venv/bin/activate
+```
+
+### 3. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Ensure the trained model file is available at the location expected by the application.
+
+### 4. Run the Application
+
+```bash
+streamlit run app.py
+```
+
+Open the local URL displayed in your terminal, usually `http://localhost:8501`.
+
+## 🎯 Problem It Solves
+
+Plant diseases can affect crop quality and agricultural productivity. PlantCare AI provides an accessible image-based screening tool to help users identify potential plant diseases and explore possible treatment options.
